@@ -6,6 +6,7 @@ import 'package:todo_bts/src/utils/index.dart';
 import 'package:todo_bts/src/viewmodels/todo_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_bts/src/models/todo.dart';
+import 'package:todo_bts/src/models/item.dart';
 
 class TodoView extends StatefulWidget {
   const TodoView({super.key});
@@ -39,27 +40,28 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
         ),
         body: SafeArea(
             child: RefreshIndicator(
-                backgroundColor: Colors.teal,
-                color: Colors.white,
-                strokeWidth: 2.0,
-                onRefresh: () async {},
-                child: ScrollConfiguration(
-                    behavior: const ScrollBehavior(),
-                    child: todoController.isLoading
-                        ? const Center(
-                            child:
-                                CircularProgressIndicator(color: Colors.teal))
-                        : !todoController.hasError
-                            ? _buildTodos(context, todoController.todos)
-                            : Column(
-                                children: <Widget>[
-                                  Text("Error: ${todoController.errorMsg}"),
-                                  const SizedBox(height: 10),
-                                  ElevatedButton(
-                                      onPressed: () async {},
-                                      child: const Text('Refresh Token'))
-                                ],
-                              )))));
+                    backgroundColor: Colors.teal,
+                    color: Colors.white,
+                    strokeWidth: 2.0,
+                    onRefresh: () async {},
+                    child: ScrollConfiguration(
+                        behavior: const ScrollBehavior(),
+                        child: todoController.isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                    color: Colors.teal))
+                            : !todoController.hasError
+                                ? _buildTodos(context, todoController.todos)
+                                : Column(
+                                    children: <Widget>[
+                                      Text("Error: ${todoController.errorMsg}"),
+                                      const SizedBox(height: 10),
+                                      ElevatedButton(
+                                          onPressed: () async {},
+                                          child: const Text('Refresh Token'))
+                                    ],
+                                  )))
+                .addPd(all: 10)));
   }
 
   Widget _buildTodos(BuildContext context, List<Todo>? data) {
@@ -71,10 +73,16 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
         padding: const EdgeInsets.symmetric(vertical: 10),
         itemBuilder: (BuildContext context, int index) {
           Todo item = data[index];
+          List<Item> itemDetail = item.items;
+          List<String> itemString = itemDetail.map((el) => el.name).toList();
+          String content = itemString.join(',').toString();
           return CardTile(
               height: 60,
               widget: _buildContentTile(context, item),
-              onTap: () {});
+              onTap: () async {
+                await UIHelper.modalDialog(
+                    context: context, title: 'Todo Detail', content: content);
+              });
         });
   }
 
