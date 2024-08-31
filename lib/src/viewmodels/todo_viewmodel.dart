@@ -3,7 +3,7 @@ import 'package:todo_bts/src/models/todo.dart';
 import 'package:todo_bts/src/services/todo_repositories.dart';
 
 class TodoViewmodel with ChangeNotifier {
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool _hasError = false;
   String _errorMsg = '';
   String _message = '';
@@ -13,8 +13,8 @@ class TodoViewmodel with ChangeNotifier {
   String get errorMsg => _errorMsg;
   String get message => _message;
 
-  List<Todo> _todos = [];
-  List<Todo> get todos => _todos;
+  List<Todo>? _todos;
+  List<Todo> get todos => _todos!;
 
   void setLoading(bool isLoading) {
     _isLoading = isLoading;
@@ -34,7 +34,7 @@ class TodoViewmodel with ChangeNotifier {
 
   void setTodo(List<Todo>? todos) {
     _todos = todos!;
-    setLoading(false);
+    _isLoading = false;
     notifyListeners();
   }
 }

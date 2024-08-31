@@ -7,6 +7,7 @@ import 'package:todo_bts/src/viewmodels/todo_viewmodel.dart';
 import 'src/app.dart';
 
 Future<void> main() async {
+  Provider.debugCheckInvalidValueType = null;
   runApp(MultiProvider(
     providers: [
       Provider<NetworkService>(create: (_) => NetworkService()),

@@ -31,9 +31,8 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final todoController = Provider.of<TodoViewmodel>(context, listen: false);
+    final todoController = Provider.of<TodoViewmodel>(context, listen: true);
     return Scaffold(
-        backgroundColor: Colors.white70,
         appBar: AppBar(
           title: Text('Todo Checklist BTS', style: AppStyles.wRegular(20)),
           backgroundColor: AppColors.primary,
@@ -61,7 +60,16 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
                                           child: const Text('Refresh Token'))
                                     ],
                                   )))
-                .addPd(all: 10)));
+                .addPd(all: 10)),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            final todoController =
+                Provider.of<TodoViewmodel>(context, listen: false);
+            // todoController.addTodo();
+          },
+          backgroundColor: AppColors.primary,
+          child: const Icon(Icons.add),
+        ));
   }
 
   Widget _buildTodos(BuildContext context, List<Todo>? data) {
@@ -98,8 +106,8 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
             overflow: TextOverflow.ellipsis,
             style: AppStyles.primLight(16),
           )),
-          ElevatedButton(
-              onPressed: () async {}, child: const Text('Select Item'))
+          Text(' ${item.items.length} items'),
+          SizedBox(width: 8)
         ]);
   }
 }
