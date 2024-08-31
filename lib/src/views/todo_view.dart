@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todo_bts/src/services/todo_repositories.dart';
-import 'package:todo_bts/src/viewmodels/loading_notifier.dart';
 import 'package:todo_bts/src/views/widgets/index.dart';
 import 'package:todo_bts/src/utils/index.dart';
 import 'package:todo_bts/src/viewmodels/todo_viewmodel.dart';
@@ -16,6 +15,7 @@ class TodoView extends StatefulWidget {
 }
 
 class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
+  TextEditingController todoName = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -62,10 +62,12 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
                                   )))
                 .addPd(all: 10)),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            final todoController =
-                Provider.of<TodoViewmodel>(context, listen: false);
-            // todoController.addTodo();
+          onPressed: () async {
+            await UIHelper.modalSheet(
+                context: context,
+                child: AppBottomsheet(
+                  colWidget: _buildFormTodo(),
+                ));
           },
           backgroundColor: AppColors.primary,
           child: const Icon(Icons.add),
@@ -81,9 +83,12 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
         padding: const EdgeInsets.symmetric(vertical: 10),
         itemBuilder: (BuildContext context, int index) {
           Todo item = data[index];
-          List<Item> itemDetail = item.items;
-          List<String> itemString = itemDetail.map((el) => el.name).toList();
-          String content = itemString.join(',').toString();
+          String content = '';
+          if (item.items != null) {
+            List<Item> itemDetail = item.items!;
+            List<String> itemString = itemDetail.map((el) => el.name).toList();
+            content = itemString.join(',').toString();
+          }
           return CardTile(
               height: 60,
               widget: _buildContentTile(context, item),
@@ -95,6 +100,7 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
   }
 
   Widget _buildContentTile(BuildContext context, Todo item) {
+    String items = '${item.items == null ? 0 : item.items!.length}';
     return Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,8 +112,34 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
             overflow: TextOverflow.ellipsis,
             style: AppStyles.primLight(16),
           )),
-          Text(' ${item.items.length} items'),
+          Text(' ${items} items'),
           SizedBox(width: 8)
         ]);
+  }
+
+  List<Widget> _buildFormTodo() {
+    return [
+      Center(child: Text('Add Todo', style: AppStyles.primBold(15)))
+          .addPd(all: 10),
+      TextField(
+          controller: todoName,
+          cursorColor: AppColors.primary,
+          style: AppStyles.primLight(12),
+          decoration: InputDecoration(
+            hintText: '@todo name',
+            hoverColor: AppColors.lightgray,
+            fillColor: AppColors.lightgray,
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: AppColors.primary),
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: AppColors.primary)),
+            filled: true,
+          ))
+    ];
   }
 }
