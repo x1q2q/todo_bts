@@ -8,7 +8,7 @@ class Item {
       required this.itemCompletionStatus});
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
-      id: int.parse(json['id']),
+      id: json['id'],
       name: json['name'],
       itemCompletionStatus: json['itemCompletionStatus'],
     );

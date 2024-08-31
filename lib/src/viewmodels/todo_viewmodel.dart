@@ -34,6 +34,7 @@ class TodoViewmodel with ChangeNotifier {
 
   void setTodo(List<Todo>? todos) {
     _todos = todos!;
+    setLoading(false);
     notifyListeners();
   }
 }

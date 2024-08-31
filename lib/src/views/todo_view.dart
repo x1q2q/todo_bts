@@ -22,35 +22,44 @@ class _TodoViewState extends State<TodoView> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final provider = Provider.of<TodoRepositories>(context, listen: false);
       final todoController = Provider.of<TodoViewmodel>(context, listen: false);
-      List<Todo>? todos = await provider.getTodo(Core.token);
-      todoController.setTodo(todos);
+      await provider.getTodo(Core.token).then((val) {
+        todoController.setTodo(val);
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final todoController = Provider.of<TodoViewmodel>(context, listen: false);
-    return RefreshIndicator(
-        backgroundColor: Colors.teal,
-        color: Colors.white,
-        strokeWidth: 2.0,
-        onRefresh: () async {},
-        child: ScrollConfiguration(
-            behavior: const ScrollBehavior(),
-            child: todoController.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(color: Colors.teal))
-                : !todoController.hasError
-                    ? _buildTodos(context, todoController.todos)
-                    : Column(
-                        children: <Widget>[
-                          Text("Error: ${todoController.errorMsg}"),
-                          const SizedBox(height: 10),
-                          ElevatedButton(
-                              onPressed: () async {},
-                              child: const Text('Refresh Token'))
-                        ],
-                      )));
+    return Scaffold(
+        backgroundColor: Colors.white70,
+        appBar: AppBar(
+          title: Text('Todo Checklist BTS', style: AppStyles.wRegular(20)),
+          backgroundColor: AppColors.primary,
+        ),
+        body: SafeArea(
+            child: RefreshIndicator(
+                backgroundColor: Colors.teal,
+                color: Colors.white,
+                strokeWidth: 2.0,
+                onRefresh: () async {},
+                child: ScrollConfiguration(
+                    behavior: const ScrollBehavior(),
+                    child: todoController.isLoading
+                        ? const Center(
+                            child:
+                                CircularProgressIndicator(color: Colors.teal))
+                        : !todoController.hasError
+                            ? _buildTodos(context, todoController.todos)
+                            : Column(
+                                children: <Widget>[
+                                  Text("Error: ${todoController.errorMsg}"),
+                                  const SizedBox(height: 10),
+                                  ElevatedButton(
+                                      onPressed: () async {},
+                                      child: const Text('Refresh Token'))
+                                ],
+                              )))));
   }
 
   Widget _buildTodos(BuildContext context, List<Todo>? data) {

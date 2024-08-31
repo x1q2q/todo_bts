@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_bts/src/utils/index.dart';
 import 'todo_view.dart';
 
 class TodoPage extends StatelessWidget {
@@ -6,8 +7,6 @@ class TodoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('Todo Checklist BTS')),
-        body: const SafeArea(child: TodoView()));
+    return const TodoView();
   }
 }

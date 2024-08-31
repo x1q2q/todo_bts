@@ -27,10 +27,10 @@ class TodoRepositories with ChangeNotifier {
   Future<List<Todo>> getTodo(String token) async {
     _networkService.setToken(token);
     final response = await _networkService.fetchData(Core.todo);
-    print(response);
     if (response.statusCode == 200) {
       final Map result = Map.from(response.data);
       final List<dynamic> jsonResults = result['data'];
+      print(jsonResults);
       List<Todo> todo = List.generate(jsonResults.length, (j) {
         return Todo.fromJson(jsonResults[j]);
       });

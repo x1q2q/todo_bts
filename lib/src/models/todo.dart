@@ -9,8 +9,7 @@ class Todo {
     List<Item> extractItem = List.generate(json['items'].length, (j) {
       return Item.fromJson(json['items'][j]);
     });
-    return Todo(
-        id: int.parse(json['id']), name: json['name'], items: extractItem);
+    return Todo(id: json['id'], name: json['name'], items: extractItem);
   }
   Map<String, dynamic> toJson() {
     return {'id': id, 'name': name, 'items': items};
